@@ -1,7 +1,6 @@
 provider "aws" {
   region     = "ca-central-1"
-#   access_key = "AKIA4TOAE57I6MX7BX3D"
-#   secret_key = "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"
+
 }
 
 data "aws_security_group" "selected" {
@@ -19,12 +18,6 @@ resource "aws_instance" "web" {
   }
 }
 
-# data "aws_key_pair" "key_pair" {
-#   key_name           = "keypair1_canada_central"
-#   include_public_key = true
-
-  
-# }
 
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
