@@ -1,0 +1,6 @@
+not-commit.tf
+*/.terraform/*
+*.tfstate
+*.tfstate.*
+*.lock.*
+.terraform
