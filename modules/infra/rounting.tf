@@ -1,10 +1,33 @@
+resource "aws_cloudfront_cache_policy" "demo-cloudfront_cache_policy" {
+  name        = "demo_cloudfront_cache_policy"
+  min_ttl     = 10
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "whitelist"
+      cookies {
+        items = ["example"]
+      }
+    }
+    headers_config {
+      header_behavior = "whitelist"
+      headers {
+        items = ["example"]
+      }
+    }
+    query_strings_config {
+      query_string_behavior = "whitelist"
+      query_strings {
+        items = ["example"]
+      }
+    }
+  }
+}
 
 resource "aws_cloudfront_distribution" "demo_cloudfront" {
   origin {
     domain_name              = aws_lb.demo-alb.dns_name
     # origin_access_control_id = aws_cloudfront_origin_access_control.default.id
     origin_id                = aws_lb.demo-alb.name
-    origin_path = "/"
     custom_origin_config {
         http_port= "80"
         https_port="443"
@@ -17,13 +40,13 @@ resource "aws_cloudfront_distribution" "demo_cloudfront" {
   enabled             = true
 #   default_root_object = "index.html"
 
-  aliases = ["mysite.example.com", "yoursite.example.com"]
+  aliases = ["numerix-md.com"]
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = aws_lb.demo-alb.name
-    cache_policy_id = "${aws_lb.demo-alb.name}-cache-policy"
+    cache_policy_id = aws_cloudfront_cache_policy.demo-cloudfront_cache_policy.id
     viewer_protocol_policy = "allow-all"
     min_ttl                = 0
     default_ttl            = 3600
@@ -68,7 +91,7 @@ resource "aws_cloudfront_distribution" "demo_cloudfront" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = false
+    cloudfront_default_certificate = true
     #acm_certificate_arn = aws_acm_certificate.demo-tls-cert.id 
   }
 }
