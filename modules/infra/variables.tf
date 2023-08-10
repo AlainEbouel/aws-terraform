@@ -25,3 +25,7 @@ variable "ec2-names-2" {
   type    = list(string)
   default = []
 }
+variable "instance" {
+  type = map(string)
+  default = {}
+}
