@@ -1,4 +1,3 @@
-#!/bin/bash
-sudo apt update -y
-sudo apt install apache2 nginx -y
-sudo echo '<h1 STYLE="color: blue">Serveur $HOSTNAME</h1>' > /var/www/html/index.html
+IyEvYmluL2Jhc2gKc3VkbyBhcHQgdXBkYXRlIC15CnN1ZG8gYXB0LWdldCBpbnN0YWxsIGFwYWNo
+ZTIgLXkKc3VkbyBlY2hvICc8aDEgU1RZTEU9ImNvbG9yOiBibHVlIj5XZWxjb21lIHRvIGRlbW8g
+c2VydmVyPC9oMT4nID4gL3Zhci93d3cvaHRtbC9pbmRleC5odG1sCg==

@@ -50,6 +50,12 @@ resource "aws_subnet" "private-subnet" {
   }
 }
 
+resource "aws_route_table_association" "subnet-route_table-association" {
+  count      = length(var.private_subnets)
+  subnet_id      = aws_subnet.public-subnet[count.index].id
+  route_table_id = aws_route_table.demo_route_table.id
+}
+
 resource "aws_network_acl" "demo-NACL" {
   vpc_id = aws_vpc.demo_vpc.id
 
