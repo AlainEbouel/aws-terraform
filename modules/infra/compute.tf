@@ -51,24 +51,10 @@ resource "aws_launch_template" "demo-launch-template" {
   }
 
   user_data = file("../modules/infra/instance-launch.sh")
-  }
-
-resource "aws_autoscaling_group" "demo-ASG" {
-  vpc_zone_identifier = [for sub in aws_subnet.public-subnet: sub.id]
-  desired_capacity   = 2             
-  max_size           = 3
-  min_size           = 1
-  health_check_type = "ELB"
- 
-  mixed_instances_policy {
-    launch_template {
-      launch_template_specification {
-        launch_template_id = aws_launch_template.demo-launch-template.id
-      }
-    }
+  lifecycle {
+    ignore_changes = [ user_data ]
   }
 }
-
 
 resource "aws_security_group" "alb-sg" {
   name        = "public-sg"
@@ -170,10 +156,28 @@ resource "aws_lb_target_group" "demo-target_group" {
 #   target_id        = concat(aws_instance.ec2_instances-1, aws_instance.ec2_instances-1)[count.index].id
 #   port             = 80
 # }
-# resource "aws_autoscaling_attachment" "demo-elb-ASG-attachment" {
-#   autoscaling_group_name = aws_autoscaling_group.demo-ASG.id
-#   elb                    = aws_lb.demo-alb
-# }
+resource "aws_autoscaling_attachment" "demo-elb-ASG-attachment" {
+  autoscaling_group_name = aws_autoscaling_group.demo-ASG.id
+  # elb                    = aws_lb.demo-alb.arn
+  lb_target_group_arn    = aws_lb_target_group.demo-target_group.id
+}
+
+resource "aws_autoscaling_group" "demo-ASG" {
+  vpc_zone_identifier = [for sub in aws_subnet.public-subnet: sub.id]
+  desired_capacity   = 2             
+  max_size           = 3
+  min_size           = 1
+  health_check_type = "ELB"
+ 
+  mixed_instances_policy {
+    launch_template {
+      launch_template_specification {
+        launch_template_id = aws_launch_template.demo-launch-template.id
+      }
+    }
+  }
+}
+
 
 resource "aws_autoscaling_attachment" "demo-TG-ASG-attachment" {
   autoscaling_group_name = aws_autoscaling_group.demo-ASG.id

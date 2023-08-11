@@ -18,7 +18,7 @@ resource "aws_route_table" "demo_route_table" {
   vpc_id = aws_vpc.demo_vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block  = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.demo_igw.id
   }
 
@@ -26,6 +26,16 @@ resource "aws_route_table" "demo_route_table" {
     Name = "demo-route-table"
   }
 }
+
+# resource "aws_route" "demo-route-igw-route_table" {
+#   route_table_id            = aws_route_table.demo_route_table.id
+#   destination_cidr_block  = "0.0.0.0/0"
+#   gateway_id = aws_internet_gateway.demo_igw.id
+# }
+# resource "aws_route_table_association" "igw-route_table-association" {
+#   gateway_id = aws_internet_gateway.demo_igw.id
+#   route_table_id = aws_route_table.demo_route_table.id
+# }
 
 resource "aws_subnet" "public-subnet" {
   count                   = length(var.public_subnets)
@@ -51,7 +61,7 @@ resource "aws_subnet" "private-subnet" {
 }
 
 resource "aws_route_table_association" "subnet-route_table-association" {
-  count      = length(var.private_subnets)
+  count      = length(var.public_subnets)
   subnet_id      = aws_subnet.public-subnet[count.index].id
   route_table_id = aws_route_table.demo_route_table.id
 }

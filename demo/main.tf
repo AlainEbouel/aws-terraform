@@ -26,10 +26,10 @@ provider "aws" {
   region = local.region
 }
 
-# module "infra" {
-#   source          = "../modules/infra"
-#   AZs             = local.AZs
-#   public_subnets  = local.public_subnets
-#   private_subnets = local.private_subnets
-#   instance       = local.instance
-# }
+module "infra" {
+  source          = "../modules/infra"
+  AZs             = local.AZs
+  public_subnets  = local.public_subnets
+  private_subnets = local.private_subnets
+  instance       = local.instance
+}
