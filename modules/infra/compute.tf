@@ -163,11 +163,13 @@ resource "aws_autoscaling_attachment" "demo-elb-ASG-attachment" {
 }
 
 resource "aws_autoscaling_group" "demo-ASG" {
+  name = "demo-ASG"
   vpc_zone_identifier = [for sub in aws_subnet.public-subnet: sub.id]
   desired_capacity   = 2             
   max_size           = 3
   min_size           = 1
   health_check_type = "ELB"
+  target_group_arns = [aws_lb_target_group.demo-target_group.arn]
  
   mixed_instances_policy {
     launch_template {
@@ -176,12 +178,6 @@ resource "aws_autoscaling_group" "demo-ASG" {
       }
     }
   }
-}
-
-
-resource "aws_autoscaling_attachment" "demo-TG-ASG-attachment" {
-  autoscaling_group_name = aws_autoscaling_group.demo-ASG.id
-  lb_target_group_arn    = aws_lb_target_group.demo-target_group.arn
 }
 
 resource "aws_lb" "demo-alb" {
