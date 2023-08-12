@@ -1,36 +1,4 @@
-# resource "aws_instance" "ec2_instances-1" {
-#   count = length(var.ec2-names-1)
 
-#   ami                         = var.ami
-#   instance_type               = "t2.micro"
-#   vpc_security_group_ids      = [aws_security_group.ec2-sg.id]
-#   key_name                    = aws_key_pair.demo-keypair.id
-#   subnet_id                   = aws_subnet.public-subnet[0].id
-#   associate_public_ip_address = true
-
-#   tags = {
-#     Name = var.ec2-names-1[count.index]
-#   }
-#   user_data = file("../modules/infra/instance-launch.sh")
-#   user_data_replace_on_change = true
-#   # iam_instance_profile = data.aws_iam_instance_profile.iprofile.arn
-# }
-
-# resource "aws_instance" "ec2_instances-2" {
-#   count = length(var.ec2-names-2)
-
-#   ami                         = var.ami
-#   instance_type               = "t2.micro"
-#   vpc_security_group_ids      = [aws_security_group.ec2-sg.id]
-#   key_name                    = aws_key_pair.demo-keypair.id
-#   subnet_id                   = aws_subnet.public-subnet[1].id
-#   associate_public_ip_address = true
-
-#   tags = {
-#     Name = var.ec2-names-2[count.index]
-#   }
-#   # iam_instance_profile = data.aws_iam_instance_profile.iprofile.arn
-# }
 resource "aws_launch_template" "demo-launch-template" {
   name = "demo-launch-template"
 
@@ -149,13 +117,6 @@ resource "aws_lb_target_group" "demo-target_group" {
   }
 }
 
-# resource "aws_lb_target_group_attachment" "ec2_instances-1-TG-attachment-1" {
-#   count = length(concat(var.ec2-names-1, var.ec2-names-2))
-
-#   target_group_arn = aws_lb_target_group.demo-target_group.arn
-#   target_id        = concat(aws_instance.ec2_instances-1, aws_instance.ec2_instances-1)[count.index].id
-#   port             = 80
-# }
 resource "aws_autoscaling_attachment" "demo-elb-ASG-attachment" {
   autoscaling_group_name = aws_autoscaling_group.demo-ASG.id
   # elb                    = aws_lb.demo-alb.arn
